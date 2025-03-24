@@ -1,18 +1,12 @@
 
 "use client"
 import { getHomePage } from "@/api/api";
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from "@/components/ui/carousel"
+
 import { HiAnime } from "aniwatch";
-import axios from "axios";
+// import axios from "axios";
 import Link from "next/link";  
-import Image from "next/image";
-import { useCallback, useEffect, useState } from "react";
+// import Image from "next/image";
+import {  useEffect, useState } from "react";
 
 
 
@@ -24,7 +18,7 @@ import { useCallback, useEffect, useState } from "react";
 export default function Home() {
 
   const [data,setHomeData]=useState<HiAnime.ScrapedHomePage>()
-  let [activeSpot,setSpot]=useState(0)
+  const [activeSpot,setSpot]=useState(0)
   const [isLoading, setIsLoading] = useState(true);
 
 
@@ -119,7 +113,7 @@ export default function Home() {
               <img 
                   src={spotlight[activeSpot].poster} 
                   className="w-full h-full object-cover"
-                  alt={spotlight[activeSpot].name}
+                  alt={spotlight[activeSpot].name ||""}
                 />
                 {/* Gradient overlay */}
                 <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
@@ -175,12 +169,12 @@ export default function Home() {
                   return(
                     <div className="item flex flex-col max-h-[90%] min-w-1/3 p-1 md:p-3 md:min-w-1/8 snap-start" key={index}>
                       <div className="aspect-[2/3] w-full overflow-hidden rounded-lg">
-                        <Link href={`/anime/${spotlight[activeSpot].id}`}>
+                        <Link href={`/anime/${spotlight?.[activeSpot].id}`}>
 
                           <img 
-                            src={item.poster} 
+                            src={item.poster||undefined} 
                             className="w-full h-full object-cover  hover:scale-105 transition-transform duration-200" 
-                            alt={item?.name}
+                            alt={item?.name||''}
                           />
                         </Link>
                       </div>
@@ -208,11 +202,11 @@ export default function Home() {
                   return(
                     <div className="item flex flex-col max-h-[90%] min-w-1/3 p-1 md:p-3 md:min-w-1/8 snap-start " key={index}>
                       <div className="aspect-[2/3] w-full overflow-hidden rounded-lg">
-                        <Link href={`/anime/${spotlight[activeSpot].id}`}>
+                        <Link href={`/anime/${spotlight?.[activeSpot].id}`}>
                             <img 
-                              src={item.poster} 
+                              src={item.poster||undefined} 
                               className="w-full h-full object-cover  hover:scale-105 transition-transform duration-200" 
-                              alt={item?.name}
+                              alt={item?.name||''}
                             />
                           </Link>
                       </div>

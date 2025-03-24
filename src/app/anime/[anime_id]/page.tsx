@@ -3,13 +3,12 @@ import { getAnimeDetails, getAnimeEpisodes, getAnimeEpisodeServers, getAnimeEpis
 import { HiAnime } from "aniwatch";
 import { useParams } from "next/navigation";
 import { useEffect,useState,useRef } from "react";
-import ReactHlsPlayer from "react-hls-player";
+// import ReactHlsPlayer from "react-hls-player";
 
 
 import Hls from 'hls.js'; 
-import { handleMaster } from "@/api/bunny_script";
-import { Url } from "next/dist/shared/lib/router/router";
-import { URL } from "url";
+// import { Url } from "next/dist/shared/lib/router/router";
+// import { URL } from "url";
 
 
 
@@ -79,8 +78,8 @@ export default function AnimeDetails() {
 
 
     const data=anime_details?.anime?.info
-    const seasons=anime_details?.seasons
-    const relatedAnimes=anime_details?.relatedAnimes
+    // const seasons=anime_details?.seasons
+    // const relatedAnimes=anime_details?.relatedAnimes
     const recommendedAnimes=anime_details?.recommendedAnimes
 
     
@@ -127,8 +126,8 @@ export default function AnimeDetails() {
     useEffect(() => {
 
         async function fetchData(){
-        const episodeId = episodes[activeEpisode]?.episodeId;
-        const servers = await getAnimeEpisodeServers(episodeId);
+        const episodeId = episodes?.[activeEpisode]?.episodeId;
+        const servers = await getAnimeEpisodeServers(episodeId as  string);
         setServers(servers);
         
         if (servers?.sub?.length) {
@@ -137,7 +136,7 @@ export default function AnimeDetails() {
             
             // Fetch sources for the default server
             const sources = await getAnimeEpisodeSources(
-                episodeId,
+                episodeId as string,
                 defaultServerId,
                 subOrdub
             );
@@ -264,9 +263,9 @@ export default function AnimeDetails() {
                 <div className="details-section hidden md:flex flex-col pl-10 max-w-2/10 w-full gap-4">
                     <div className="flex flex-col items-start gap-3">
                         <img 
-                            src={data?.poster} 
+                            src={data?.poster || undefined}
                             className=" max-h-[200px] object-contain " 
-                            alt={data?.name}
+                            alt={data?.name||""}
                         />
                         <div className="title w-full">
                             <h1 className="text-xl font-bold line-clamp-2">{data?.name}</h1>
@@ -302,9 +301,9 @@ export default function AnimeDetails() {
                             <div className="item flex flex-col max-h-[90%] min-w-1/3 p-1 md:p-3 md:min-w-1/8 snap-start" key={index}>
                                 <div className="aspect-[2/3] w-full overflow-hidden rounded-lg">
                                 <img 
-                                    src={item.poster} 
+                                    src={item.poster||undefined} 
                                     className="w-full h-full object-cover  hover:scale-105 transition-transform duration-200" 
-                                    alt={item?.name}
+                                    alt={item?.name||''}
                                 />
                                 </div>
                                 <h4 className="text-xs truncate md:text-ellipsis line-clamp-2 md:text-wrap md:text-base md:visible pt-2">
