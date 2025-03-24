@@ -3,6 +3,7 @@
 import { getHomePage } from "@/api/api";
 
 import { HiAnime } from "aniwatch";
+import Image from "next/image";
 // import axios from "axios";
 import Link from "next/link";  
 // import Image from "next/image";
@@ -108,9 +109,7 @@ export default function Home() {
             <>
             <Link href={`/anime/${spotlight[activeSpot].id}`}>
               <div className="absolute inset-0">
-                {/*eslint-disable-next-line @next/next/no-img-element */}
-
-              <img 
+              <Image 
                   src={spotlight[activeSpot].poster} 
                   className="w-full h-full object-cover"
                   alt={spotlight[activeSpot].name ||""}
@@ -171,10 +170,10 @@ export default function Home() {
                       <div className="aspect-[2/3] w-full overflow-hidden rounded-lg">
                         <Link href={`/anime/${spotlight?.[activeSpot].id}`}>
 
-                          <img 
-                            src={item.poster||undefined} 
-                            className="w-full h-full object-cover  hover:scale-105 transition-transform duration-200" 
-                            alt={item?.name||''}
+                        <Image 
+                              src={item.poster || ''}
+                              className="w-full h-full object-cover  hover:scale-105 transition-transform duration-200" 
+                              alt={item?.name||''}
                           />
                         </Link>
                       </div>
@@ -203,11 +202,11 @@ export default function Home() {
                     <div className="item flex flex-col max-h-[90%] min-w-1/3 p-1 md:p-3 md:min-w-1/8 snap-start " key={index}>
                       <div className="aspect-[2/3] w-full overflow-hidden rounded-lg">
                         <Link href={`/anime/${spotlight?.[activeSpot].id}`}>
-                            <img 
-                              src={item.poster||undefined} 
-                              className="w-full h-full object-cover  hover:scale-105 transition-transform duration-200" 
-                              alt={item?.name||''}
-                            />
+                        <Image 
+                            src={item.poster || ''}
+                            className="w-full h-full object-cover  hover:scale-105 transition-transform duration-200" 
+                            alt={item?.name||''}
+                        />
                           </Link>
                       </div>
                       <h4 className="text-xs truncate md:text-ellipsis md:text-wrap md:text-base md:visible pt-2 line-clamp-2">
