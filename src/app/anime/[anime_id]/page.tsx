@@ -4,9 +4,8 @@ import { HiAnime } from "aniwatch";
 import { useParams } from "next/navigation";
 import { useEffect,useState,useRef } from "react";
 // import ReactHlsPlayer from "react-hls-player";
-
-
 import Hls from 'hls.js'; 
+import Image from "next/image";
 // import { Url } from "next/dist/shared/lib/router/router";
 // import { URL } from "url";
 
@@ -57,7 +56,7 @@ export default function AnimeDetails() {
                         // Fetch sources for the default server
                         const sources = await getAnimeEpisodeSources(
                             episodeId,
-                            defaultServerId?.toString() || '',
+                            defaultServerId,
                             subOrdub
                         );
                         console.log(sources)
@@ -86,7 +85,10 @@ export default function AnimeDetails() {
 
     useEffect(() => {
         if (!sources?.sources[0]?.url || !videoRef.current) return;
+
+
         const videoUrl = sources?.sources[0]?.url;
+
         console.log(videoUrl)
         const video = videoRef.current;
 
@@ -117,7 +119,7 @@ export default function AnimeDetails() {
                 hlsRef.current.destroy();
             }
         };
-    }, [sources]);
+    }, [sources,activeServer,subOrdub]);
 
 
 
@@ -129,6 +131,7 @@ export default function AnimeDetails() {
         const episodeId = episodes?.[activeEpisode]?.episodeId;
         const servers = await getAnimeEpisodeServers(episodeId as  string);
         setServers(servers);
+        console.log(activeEpisode)
         
         if (servers?.sub?.length) {
             const defaultServerId = servers.sub[0].serverId;
@@ -137,7 +140,7 @@ export default function AnimeDetails() {
             // Fetch sources for the default server
             const sources = await getAnimeEpisodeSources(
                 episodeId as string,
-                defaultServerId?.toString() || '',
+                defaultServerId,
                 subOrdub
             );
             console.log(sources)
@@ -150,7 +153,7 @@ export default function AnimeDetails() {
         
 
 
-    },[activeEpisode,activeServer,subOrdub])
+    },[activeEpisode,activeServer,subOrdub,episodes])
 
 
 
@@ -262,11 +265,11 @@ export default function AnimeDetails() {
 
                 <div className="details-section hidden md:flex flex-col pl-10 max-w-2/10 w-full gap-4">
                     <div className="flex flex-col items-start gap-3">
-                        <img 
-                            src={data?.poster || undefined}
-                            className=" max-h-[200px] object-contain " 
-                            alt={data?.name||""}
-                        />
+                        <Image 
+                                src={data?.poster || ''}
+                                className="w-full h-full object-cover  hover:scale-105 transition-transform duration-200" 
+                                alt={data?.name||''}
+                            />
                         <div className="title w-full">
                             <h1 className="text-xl font-bold line-clamp-2">{data?.name}</h1>
                         </div>
@@ -300,8 +303,8 @@ export default function AnimeDetails() {
                             return(
                             <div className="item flex flex-col max-h-[90%] min-w-1/3 p-1 md:p-3 md:min-w-1/8 snap-start" key={index}>
                                 <div className="aspect-[2/3] w-full overflow-hidden rounded-lg">
-                                <img 
-                                    src={item.poster||undefined} 
+                                <Image 
+                                    src={item.poster || ''}
                                     className="w-full h-full object-cover  hover:scale-105 transition-transform duration-200" 
                                     alt={item?.name||''}
                                 />
