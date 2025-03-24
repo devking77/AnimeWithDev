@@ -57,7 +57,7 @@ export default function AnimeDetails() {
                         // Fetch sources for the default server
                         const sources = await getAnimeEpisodeSources(
                             episodeId,
-                            defaultServerId,
+                            defaultServerId?.toString() || '',
                             subOrdub
                         );
                         console.log(sources)
