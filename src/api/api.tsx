@@ -16,7 +16,6 @@ export async function getHomePage() {
     const {data}= await axios.get(`${BASE_URL}/home`)
 
 
-    
     return data?.data
 }
 

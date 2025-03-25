@@ -3,7 +3,7 @@
 import { getHomePage } from "@/api/api";
 
 import { HiAnime } from "aniwatch";
-import Image from "next/image";
+// import Image from "next/image";
 // import axios from "axios";
 import Link from "next/link";  
 // import Image from "next/image";
@@ -109,7 +109,7 @@ export default function Home() {
             <>
             <Link href={`/anime/${spotlight[activeSpot].id}`}>
               <div className="absolute inset-0">
-              <Image 
+              <img 
                   src={spotlight[activeSpot].poster} 
                   className="w-full h-full object-cover"
                   alt={spotlight[activeSpot].name ||""}
@@ -170,7 +170,7 @@ export default function Home() {
                       <div className="aspect-[2/3] w-full overflow-hidden rounded-lg">
                         <Link href={`/anime/${spotlight?.[activeSpot].id}`}>
 
-                        <Image 
+                        <img 
                               src={item.poster || ''}
                               className="w-full h-full object-cover  hover:scale-105 transition-transform duration-200" 
                               alt={item?.name||''}
@@ -202,7 +202,7 @@ export default function Home() {
                     <div className="item flex flex-col max-h-[90%] min-w-1/3 p-1 md:p-3 md:min-w-1/8 snap-start " key={index}>
                       <div className="aspect-[2/3] w-full overflow-hidden rounded-lg">
                         <Link href={`/anime/${spotlight?.[activeSpot].id}`}>
-                        <Image 
+                        <img 
                             src={item.poster || ''}
                             className="w-full h-full object-cover  hover:scale-105 transition-transform duration-200" 
                             alt={item?.name||''}
