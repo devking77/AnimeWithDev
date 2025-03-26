@@ -1,14 +1,27 @@
 import { HiAnime } from "aniwatch"
 import axios from "axios"
 import { Params } from "next/dist/server/request/params"
+// import { ANIME } from "./scraper"
 
 const BASE_URL=process.env.NEXT_PUBLIC_BACKEND_URL
+const PROXY_URL=process.env.NEXT_PUBLIC_PROXY_URL
 
 
-// const hianime=new HiAnime.Scraper()
 
 
+// const hianime=new ANIME.AnimeKai()
 
+
+export function getProxyUrl(url:string) {
+    const proxy_url=`/api/m3u8-proxy?url=${url}`
+    return proxy_url
+}
+
+
+// export function getProxyUrl(url:string) {
+//     const proxy_url=`${PROXY_URL}/m3u8-proxy?url=${url}`
+//     return proxy_url
+// }
 
 
 

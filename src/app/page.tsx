@@ -1,6 +1,6 @@
 
 "use client"
-import { getHomePage } from "@/api/api";
+import { getHomePage } from "@/app/api/api";
 
 import { HiAnime } from "aniwatch";
 // import Image from "next/image";

@@ -1,5 +1,5 @@
 "use client"
-import { getAnimeDetails, getAnimeEpisodes, getAnimeEpisodeServers, getAnimeEpisodeSources } from "@/api/api";
+import { getAnimeDetails, getAnimeEpisodes, getAnimeEpisodeServers, getAnimeEpisodeSources, getProxyUrl } from "@/app/api/api";
 import { HiAnime } from "aniwatch";
 import { useParams } from "next/navigation";
 import { useEffect,useState,useRef } from "react";
@@ -95,7 +95,9 @@ export default function AnimeDetails() {
 
         const videoUrl = sources?.sources[0]?.url;
 
-        // const proxy_url=axios.get(`https://prxy.miruro.to/m3u8/?url=${videoUrl}`,{headers:{"Referer":"https://www.miruro.tv/"}})
+        // const proxy_url=`http://localhost:4040/m3u8-proxy?url=${videoUrl}`
+        const proxy_url=getProxyUrl(videoUrl)
+
         // console.log(proxy_url)
         // console.log(videoUrl)
         const video = videoRef.current;
@@ -108,7 +110,7 @@ export default function AnimeDetails() {
             const hls = new Hls();
             hlsRef.current = hls;
 
-            hls.loadSource(videoUrl);
+            hls.loadSource(proxy_url);
             hls.attachMedia(video);
 
             hls.on(Hls.Events.ERROR, (event, data) => {
@@ -171,7 +173,7 @@ export default function AnimeDetails() {
 
 
     return (
-        <div className="flex flex-col items-center mt-8 md:mt-15  h-screen w-screen">
+        <div className="flex flex-col items-center mt-8 md:mt-15  w-screen">
 
         {  isLoading ? (
             <div className="flex flex-col items-center justify-center h-screen">
