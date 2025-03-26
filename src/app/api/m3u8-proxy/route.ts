@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import axios from "axios";
 import { NextRequest, NextResponse } from "next/server";
 import { LineTransform ,allowedExtensions} from "./src/utils/line-transform";
