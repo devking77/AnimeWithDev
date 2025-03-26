@@ -4,7 +4,7 @@ import { Params } from "next/dist/server/request/params"
 // import { ANIME } from "./scraper"
 
 const BASE_URL=process.env.NEXT_PUBLIC_BACKEND_URL
-const PROXY_URL=process.env.NEXT_PUBLIC_PROXY_URL
+// const PROXY_URL=process.env.NEXT_PUBLIC_PROXY_URL
 
 
 
