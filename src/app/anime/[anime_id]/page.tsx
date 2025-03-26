@@ -1,11 +1,13 @@
 "use client"
-import { getAnimeDetails, getAnimeEpisodes, getAnimeEpisodeServers, getAnimeEpisodeSources } from "@/api/api";
+import { getAnimeDetails, getAnimeEpisodes, getAnimeEpisodeServers, getAnimeEpisodeSources, getProxyUrl } from "@/app/api/api";
 import { HiAnime } from "aniwatch";
 import { useParams } from "next/navigation";
 import { useEffect,useState,useRef } from "react";
 // import ReactHlsPlayer from "react-hls-player";
 import Hls from 'hls.js'; 
-import Image from "next/image";
+// import Image from "next/image";
+// import axios from "axios";
+// import { headers } from "next/headers";
 // import { Url } from "next/dist/shared/lib/router/router";
 // import { URL } from "url";
 
@@ -26,6 +28,8 @@ export default function AnimeDetails() {
     const [videoError, setVideoError] = useState<string | null>(null);
     const videoRef = useRef<HTMLVideoElement>(null);
     const hlsRef = useRef<Hls | null>(null);
+    const [isLoading, setIsLoading] = useState(true);
+
 
 
     useEffect(() => {
@@ -50,6 +54,7 @@ export default function AnimeDetails() {
                     setServers(servers);
                     
                     if (servers?.sub?.length) {
+                        setIsLoading(false)
                         const defaultServerId = servers.sub[0].serverId;
                         setActiveServer(defaultServerId);
                         
@@ -59,7 +64,8 @@ export default function AnimeDetails() {
                             defaultServerId,
                             subOrdub
                         );
-                        console.log(sources)
+                        // console.log(sources)
+
                         setSources(sources);
                     }
                 }
@@ -89,7 +95,11 @@ export default function AnimeDetails() {
 
         const videoUrl = sources?.sources[0]?.url;
 
-        console.log(videoUrl)
+        // const proxy_url=`http://localhost:4040/m3u8-proxy?url=${videoUrl}`
+        const proxy_url=getProxyUrl(videoUrl)
+
+        // console.log(proxy_url)
+        // console.log(videoUrl)
         const video = videoRef.current;
 
         if (Hls.isSupported()) {
@@ -100,7 +110,7 @@ export default function AnimeDetails() {
             const hls = new Hls();
             hlsRef.current = hls;
 
-            hls.loadSource(videoUrl);
+            hls.loadSource(proxy_url);
             hls.attachMedia(video);
 
             hls.on(Hls.Events.ERROR, (event, data) => {
@@ -126,12 +136,12 @@ export default function AnimeDetails() {
 
 
     useEffect(() => {
-
+        
         async function fetchData(){
         const episodeId = episodes?.[activeEpisode]?.episodeId;
         const servers = await getAnimeEpisodeServers(episodeId as  string);
         setServers(servers);
-        console.log(activeEpisode)
+        // console.log(activeEpisode)
         
         if (servers?.sub?.length) {
             const defaultServerId = servers.sub[0].serverId;
@@ -143,12 +153,16 @@ export default function AnimeDetails() {
                 defaultServerId,
                 subOrdub
             );
-            console.log(sources)
+            // console.log(sources)
             setSources(sources);
 
         }
         }
-        fetchData()
+        if (!isLoading){
+
+
+            fetchData()
+        }
 
         
 
@@ -159,10 +173,18 @@ export default function AnimeDetails() {
 
 
     return (
-        <div className="flex flex-col items-center mt-8 md:mt-15 h-full w-screen">
+        <div className="flex flex-col items-center mt-8 md:mt-15  w-screen">
+
+        {  isLoading ? (
+            <div className="flex flex-col items-center justify-center h-screen">
+                <div className="spinner border-4 border-dashed rounded-full animate-spin w-16 h-16 border-gray-200"></div>
+                <p className="mt-4 text-gray-500">Loading...</p>
+            </div>  
+            ):(
+            <>
             <div className="flex flex-col-reverse md:flex-row  w-screen max-h-10/12 mt-10  ">
                
-            <div className="episodes-container flex flex-col border-1 overflow-scroll w-full min-w-1/6 mt-1 md:mt-0 md:ml-9 max-h-[calc(100vh-400px)] md:max-h-[700px]">
+                <div className="episodes-container flex flex-col border-1 overflow-scroll w-full min-w-1/6 mt-1 md:mt-0 md:ml-9 max-h-[calc(100vh-400px)] md:max-h-[700px]">
                     <div className="episodes-header h-[30px] mb-2"> 
                         <span className="font-medium pl-2 text-xs truncate">Episodes</span>
                         <span className="text-sm text-muted-foreground ml-6">{episodes?.length} episodes</span>
@@ -185,7 +207,7 @@ export default function AnimeDetails() {
 
                     <div className="main-video">
                     {videoError ? (
-                            <div className="error-message flex items-center justify-center text-white w-full h-full">
+                            <div className="error-message bg-zinc-900 rounded-3xl flex items-center justify-center text-white h-[500px]">
                                 {videoError}
                             </div>
                         ) : (
@@ -265,9 +287,9 @@ export default function AnimeDetails() {
 
                 <div className="details-section hidden md:flex flex-col pl-10 max-w-2/10 w-full gap-4">
                     <div className="flex flex-col items-start gap-3">
-                        <Image 
+                        <img 
                                 src={data?.poster || ''}
-                                className="w-full h-full object-cover  hover:scale-105 transition-transform duration-200" 
+                                className="w-full h-full md:w-3/6 object-cover" 
                                 alt={data?.name||''}
                             />
                         <div className="title w-full">
@@ -303,7 +325,7 @@ export default function AnimeDetails() {
                             return(
                             <div className="item flex flex-col max-h-[90%] min-w-1/3 p-1 md:p-3 md:min-w-1/8 snap-start" key={index}>
                                 <div className="aspect-[2/3] w-full overflow-hidden rounded-lg">
-                                <Image 
+                                <img 
                                     src={item.poster || ''}
                                     className="w-full h-full object-cover  hover:scale-105 transition-transform duration-200" 
                                     alt={item?.name||''}
@@ -329,11 +351,9 @@ export default function AnimeDetails() {
             </div>
 
 
+        </>
             
-
-
-            
+        )}
         </div>
-    )
 
-}
+)}
