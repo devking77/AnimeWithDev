@@ -10,17 +10,23 @@ export async function GET(req: NextRequest) {
         if (!url) return NextResponse.json({ error: "url is required" }, { status: 400 });
 
         const isStaticFiles = allowedExtensions.some(ext => url.endsWith(ext));
-        const baseUrl = url.replace(/[^/]+$/, "");
+        const baseUrl = url.replace(/[^/]+$/, "");  
 
         const response = await axios.get(url, {
             responseType: "stream",
             headers: { 
                 Accept: "*/*", 
-                Referer: "https://megacloud.club/" 
+                Referer: "https://megacloud.club/" ,
+                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
+                "Accept-Encoding": "gzip, deflate, br",
+                "Connection": "keep-alive"
             }
         });
 
         const headers = new Headers(response.headers as any);
+        headers.set('Access-Control-Allow-Origin', '*');
+        headers.set('Access-Control-Allow-Methods', 'GET, OPTIONS');
+        headers.set('Access-Control-Allow-Headers', 'Content-Type');
         if (!isStaticFiles) headers.delete("content-length");
 
         if (isStaticFiles) {
@@ -46,8 +52,14 @@ export async function GET(req: NextRequest) {
 
         return new NextResponse(transformedStream, { headers });
 
-    } catch (error: any) {
-        console.error(error.message);
-        return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
-    }
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        } catch (error: any) {
+            // Log detailed error information for better debugging in Vercel
+            console.error('M3U8 Proxy Error:', {
+                message: error.message,
+                stack: error.stack,
+                url: req.url
+            });
+            return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
+        }
 }

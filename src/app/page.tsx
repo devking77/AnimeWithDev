@@ -168,7 +168,7 @@ export default function Home() {
                   return(
                     <div className="item flex flex-col max-h-[90%] min-w-1/3 p-1 md:p-3 md:min-w-1/8 snap-start" key={index}>
                       <div className="aspect-[2/3] w-full overflow-hidden rounded-lg">
-                        <Link href={`/anime/${spotlight?.[activeSpot].id}`}>
+                        <Link href={`/anime/${item.id}`}>
 
                         <img 
                               src={item.poster || ''}
@@ -201,7 +201,7 @@ export default function Home() {
                   return(
                     <div className="item flex flex-col max-h-[90%] min-w-1/3 p-1 md:p-3 md:min-w-1/8 snap-start " key={index}>
                       <div className="aspect-[2/3] w-full overflow-hidden rounded-lg">
-                        <Link href={`/anime/${spotlight?.[activeSpot].id}`}>
+                        <Link href={`/anime/${item.id}`}>
                         <img 
                             src={item.poster || ''}
                             className="w-full h-full object-cover  hover:scale-105 transition-transform duration-200" 

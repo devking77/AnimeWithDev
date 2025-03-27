@@ -129,7 +129,7 @@ export default function AnimeDetails() {
                 hlsRef.current.destroy();
             }
         };
-    }, [sources,activeServer,subOrdub]);
+    }, [activeServer, sources?.sources, subOrdub]);
 
 
 
