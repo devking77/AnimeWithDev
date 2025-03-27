@@ -54,6 +54,11 @@ export async function getAnimeEpisodeSources(episode_id:HiAnime.AnimeEpisode["ep
     return data?.data
 }
 
+export async function getAnimeSearch(query:string,page:number=1) {
+    const {data}= await axios.get(`${BASE_URL}/search?q=${query}&page=${page}`)
+    return data?.data
+}
+
 
 
 
