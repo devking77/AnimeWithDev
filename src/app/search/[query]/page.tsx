@@ -12,6 +12,7 @@ import { useEffect, useState } from "react"
 
 export default function SearchResults() {
     const {query}=useParams()
+    console.log(query)
     // const [pageNum,setPageNum]=useState(1)
     // const [searchFilters, setSearchFilters] = useState<HiAnime.SearchFilters>({});
     const [searchResults, setSearchResults] = useState<HiAnime.ScrapedAnimeSearchResult | undefined>();
@@ -49,7 +50,7 @@ export default function SearchResults() {
               <h1 className="text-l md:text-3xl font-bold md:mb-4 text-left">Search Results</h1>
             </div>
 
-            <div className=" flex flex-wrap  pt-5 w-full overflow-y-scroll   md:max-w-11/12 no-scrollbar snap-x  ">
+            <div className=" flex flex-wrap  pt-5 w-full overflow-y-scroll  md:max-w-11/12 no-scrollbar snap-x  ">
                 {
                     searchResults?.animes?.map((item,index)=>{
                         return(

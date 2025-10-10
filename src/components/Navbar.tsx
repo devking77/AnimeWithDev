@@ -7,14 +7,14 @@ import { useState } from "react"
 
 export default function Navbar() {
   
-  const router=useRouter()
   const [searchQuery, setSearchQuery] = useState("")
+  const router=useRouter()
 
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault()
     if (searchQuery.trim()) {
-      router.push(`/search/${searchQuery}`)
+      router.push(`/search/${encodeURIComponent(searchQuery)}`)
     }
   }
   return (

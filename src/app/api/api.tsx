@@ -34,7 +34,9 @@ export async function getHomePage() {
 
 export async function getAnimeDetails(anime_id:Params["anime_id"]) {
     const {data}= await axios.get(`${BASE_URL}/anime/${anime_id}`)
+    
     return data?.data
+
 }
 
 export async function getAnimeEpisodes(anime_id:Params["anime_id"]) {

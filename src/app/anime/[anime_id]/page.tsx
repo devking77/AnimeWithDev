@@ -22,7 +22,7 @@ export default function AnimeDetails() {
     const [episodes,setEpisodes]=useState<HiAnime.AnimeEpisode[] | null>(null)
     const [servers,setServers]=useState<HiAnime.ScrapedEpisodeServers| null>(null)
     const [activeEpisode,setActiveEpisode]=useState(0)  
-    const [activeServer,setActiveServer]=useState<number|null>()
+    const [activeServer,setActiveServer]=useState<number|null|string>()
     const [subOrdub,setCategory]=useState("sub")
     const [sources,setSources]=useState<HiAnime.ScrapedAnimeEpisodesSources | null>(null)
     const [videoError, setVideoError] = useState<string | null>(null);
@@ -47,28 +47,32 @@ export default function AnimeDetails() {
                     const lastEpisodeIndex = 0//animeEpisodes.episodes.length - 1;
                     setEpisodes(animeEpisodes.episodes);
                     setActiveEpisode(lastEpisodeIndex);
+
+                     setIsLoading(false)
                     
                     // Fetch servers for the last episode
-                    const episodeId = animeEpisodes.episodes[lastEpisodeIndex].episodeId;
+                    const episodeId = animeEpisodes.episodes[lastEpisodeIndex]?.episodeId;
                     const servers = await getAnimeEpisodeServers(episodeId);
                     setServers(servers);
                     
-                    if (servers?.sub?.length) {
-                        setIsLoading(false)
-                        const defaultServerId = servers.sub[0].serverId;
-                        setActiveServer(defaultServerId);
+                    // if (servers?.sub?.length) {
+                    //     setIsLoading(false)
+                    //     const defaultServerId = servers.sub[0].serverId;
+                    //     setActiveServer(defaultServerId);
                         
-                        // Fetch sources for the default server
-                        const sources = await getAnimeEpisodeSources(
-                            episodeId,
-                            defaultServerId,
-                            subOrdub
-                        );
-                        // console.log(sources)
+                    //     // Fetch sources for the default server
+                    //     const sources = await getAnimeEpisodeSources(
+                    //         episodeId,
+                    //         defaultServerId,
+                    //         subOrdub
+                    //     );
+                    //     // console.log(sources)
 
-                        setSources(sources);
-                    }
+                    //     setSources(sources);
+                    // }
                 }
+
+
             } catch (error) {
                 console.error('Error fetching anime data:', error);
                 // Handle error state here
@@ -83,6 +87,7 @@ export default function AnimeDetails() {
 
 
     const data=anime_details?.anime?.info
+    console.log(data)
     // const seasons=anime_details?.seasons
     // const relatedAnimes=anime_details?.relatedAnimes
     const recommendedAnimes=anime_details?.recommendedAnimes
@@ -90,45 +95,45 @@ export default function AnimeDetails() {
     
 
     useEffect(() => {
-        if (!sources?.sources[0]?.url || !videoRef.current) return;
+        // if (!sources?.sources[0]?.url || !videoRef.current) return;
 
 
-        const videoUrl = sources?.sources[0]?.url;
+        // const videoUrl = sources?.sources[0]?.url;
 
-        // const proxy_url=`http://localhost:4040/m3u8-proxy?url=${videoUrl}`
-        const proxy_url=getProxyUrl(videoUrl)
+        // // const proxy_url=`http://localhost:4040/m3u8-proxy?url=${videoUrl}`
+        // const proxy_url=getProxyUrl(videoUrl)
 
-        // console.log(proxy_url)
-        // console.log(videoUrl)
-        const video = videoRef.current;
+        // // console.log(proxy_url)
+        // // console.log(videoUrl)
+        // const video = videoRef.current;
 
-        if (Hls.isSupported()) {
-            if (hlsRef.current) {
-                hlsRef.current.destroy();
-            }
+        // if (Hls.isSupported()) {
+        //     if (hlsRef.current) {
+        //         hlsRef.current.destroy();
+        //     }
 
-            const hls = new Hls();
-            hlsRef.current = hls;
+        //     const hls = new Hls();
+        //     hlsRef.current = hls;
 
-            hls.loadSource(proxy_url);
-            hls.attachMedia(video);
+        //     hls.loadSource(proxy_url);
+        //     hls.attachMedia(video);
 
-            hls.on(Hls.Events.ERROR, (event, data) => {
-                if (data.fatal) {
-                    setVideoError('Error loading video');
-                    console.error('HLS error:', data);
-                }
-            });
-        } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-            // For Safari which has native HLS support
-            video.src = videoUrl;
-        }
+        //     hls.on(Hls.Events.ERROR, (event, data) => {
+        //         if (data.fatal) {
+        //             setVideoError('Error loading video');
+        //             console.error('HLS error:', data);
+        //         }
+        //     });
+        // } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+        //     // For Safari which has native HLS support
+        //     video.src = videoUrl;
+        // }
 
-        return () => {
-            if (hlsRef.current) {
-                hlsRef.current.destroy();
-            }
-        };
+        // return () => {
+        //     if (hlsRef.current) {
+        //         hlsRef.current.destroy();
+        //     }
+        // };
     }, [activeServer, sources?.sources, subOrdub]);
 
 
@@ -137,32 +142,32 @@ export default function AnimeDetails() {
 
     useEffect(() => {
         
-        async function fetchData(){
-        const episodeId = episodes?.[activeEpisode]?.episodeId;
-        const servers = await getAnimeEpisodeServers(episodeId as  string);
-        setServers(servers);
-        // console.log(activeEpisode)
+        // async function fetchData(){
+        // const episodeId = episodes?.[activeEpisode]?.episodeId;
+        // const servers = await getAnimeEpisodeServers(episodeId as  string);
+        // setServers(servers);
+        // // console.log(activeEpisode)
         
-        if (servers?.sub?.length) {
-            const defaultServerId = servers.sub[0].serverId;
-            setActiveServer(defaultServerId);
+        // if (servers?.sub?.length) {
+        //     const defaultServerId = servers.sub[0].serverId;
+        //     setActiveServer(defaultServerId);
             
-            // Fetch sources for the default server
-            const sources = await getAnimeEpisodeSources(
-                episodeId as string,
-                defaultServerId,
-                subOrdub
-            );
-            // console.log(sources)
-            setSources(sources);
+        //     // Fetch sources for the default server
+        //     const sources = await getAnimeEpisodeSources(
+        //         episodeId as string,
+        //         defaultServerId,
+        //         subOrdub
+        //     );
+        //     // console.log(sources)
+        //     setSources(sources);
 
-        }
-        }
-        if (!isLoading){
+        // }
+        // }
+        // if (!isLoading){
 
 
-            fetchData()
-        }
+        //     fetchData()
+        // }
 
         
 
@@ -206,7 +211,7 @@ export default function AnimeDetails() {
                 <div className="video-container flex flex-col min-w-3/5  md:pl-2">
 
                     <div className="main-video">
-                    {videoError ? (
+                    {/* {videoError ? (
                             <div className="error-message bg-zinc-900 rounded-3xl flex items-center justify-center text-white h-[500px]">
                                 {videoError}
                             </div>
@@ -217,7 +222,18 @@ export default function AnimeDetails() {
                                 controls
                                 autoPlay={false}
                             />
-                        )}
+                        )} */}
+
+
+                         <iframe 
+                                className=" w-full h-55 md:h-140 "
+                                src={`https://player.videasy.net/anime/${data?.anilistId ? data?.anilistId : data?.malId}/${activeEpisode+1}?dub=${subOrdub=="sub"?false:true}`}
+                                width="100%"
+                                height="100%"
+                                allowFullScreen
+                                allow="encrypted-media"
+                            />
+
                     </div>
 
                     <div className="server-section flex flex-col md:flex-row">
@@ -228,29 +244,36 @@ export default function AnimeDetails() {
                         <div className="server-list flex flex-col bg-rose-950 md:bg-transparent justify-center p-5 gap-2 rounded-b-xl md:rounded-none">
                             <div className="subs flex flex-row items-center">
                                 <div>
-                                    <span className="font-bold">Sub:</span>
+                                    <span className="font-bold">Severs:</span>
                                 </div>
 
 
                                 <div className="flex flex-row ml-2 ">
 
-                                    {servers?.sub?.map((server,index)=>{
-                                        return(
-                                            <div key={index} className="flex server p-1 cursor-pointer items-center bg-gray-800  rounded-lg  mx-1 hover:bg-gray-700 transition-colors"
-                                            onClick={()=>{setActiveServer(server?.serverId);setCategory("sub")}}
+                                   
+                                       
+                                            <div key={0} className="flex server p-1 cursor-pointer items-center bg-gray-800  rounded-lg  mx-1 hover:bg-gray-700 transition-colors"
+                                            onClick={()=>{setActiveServer("sub");setCategory("sub")}}
                                             
                                             >
-                                                <span className="server-name ">{server?.serverName}</span>
+                                                <span className="server-name ">{'Sub'}</span>
                                             </div>
-                                        )
-                                    })
-                                }
+
+
+                                            <div key={1} className={`dubs ${servers?.dub?.length||0 >= 1 ? "visible" : "invisible"} flex server p-1 cursor-pointer items-center bg-gray-800  rounded-lg  mx-1 hover:bg-gray-700 transition-colors`}
+                                            onClick={()=>{setActiveServer("dub");setCategory("dub")}}
+                                            
+                                            >
+                                                <span className="server-name ">{'Dub'}</span>
+                                            </div>
+                                
+                                
 
                                 </div>
                     
                             </div>
 
-                            <div className={`dubs ${servers?.dub?.length||0 >= 1 ? "visible" : "invisible"} flex flex-row items-center `}>
+                            {/* <div className={`dubs ${servers?.dub?.length||0 >= 1 ? "visible" : "invisible"} flex flex-row items-center `}>
 
                                 <div>
                                     <span className="font-bold">Dub:</span>
@@ -272,7 +295,7 @@ export default function AnimeDetails() {
                                 </div>
 
 
-                            </div>
+                            </div> */}
 
 
 
