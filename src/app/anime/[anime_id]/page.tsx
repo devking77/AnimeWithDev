@@ -1,10 +1,10 @@
 "use client"
-import { getAnimeDetails, getAnimeEpisodes, getAnimeEpisodeServers, getAnimeEpisodeSources, getProxyUrl } from "@/app/api/api";
+import { getAnimeDetails, getAnimeEpisodes, getAnimeEpisodeServers } from "@/app/api/api";
 import { HiAnime } from "aniwatch";
 import { useParams } from "next/navigation";
-import { useEffect,useState,useRef } from "react";
+import { useEffect,useState } from "react";
 // import ReactHlsPlayer from "react-hls-player";
-import Hls from 'hls.js'; 
+// import Hls from 'hls.js'; 
 // import Image from "next/image";
 // import axios from "axios";
 // import { headers } from "next/headers";
@@ -24,10 +24,10 @@ export default function AnimeDetails() {
     const [activeEpisode,setActiveEpisode]=useState(0)  
     const [activeServer,setActiveServer]=useState<number|null|string>()
     const [subOrdub,setCategory]=useState("sub")
-    const [sources,setSources]=useState<HiAnime.ScrapedAnimeEpisodesSources | null>(null)
-    const [videoError, setVideoError] = useState<string | null>(null);
-    const videoRef = useRef<HTMLVideoElement>(null);
-    const hlsRef = useRef<Hls | null>(null);
+    // const [sources,setSources]=useState<HiAnime.ScrapedAnimeEpisodesSources | null>(null)
+    // const [videoError, setVideoError] = useState<string | null>(null);
+    // const videoRef = useRef<HTMLVideoElement>(null);
+    // const hlsRef = useRef<Hls | null>(null);
     const [isLoading, setIsLoading] = useState(true);
 
 
@@ -94,7 +94,7 @@ export default function AnimeDetails() {
 
     
 
-    useEffect(() => {
+    // useEffect(() => {
         // if (!sources?.sources[0]?.url || !videoRef.current) return;
 
 
@@ -134,7 +134,7 @@ export default function AnimeDetails() {
         //         hlsRef.current.destroy();
         //     }
         // };
-    }, [activeServer, sources?.sources, subOrdub]);
+    // }, [activeServer, sources?.sources, subOrdub]);
 
 
 
